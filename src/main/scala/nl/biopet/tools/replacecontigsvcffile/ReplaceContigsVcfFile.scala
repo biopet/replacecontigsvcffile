@@ -8,7 +8,7 @@ import nl.biopet.utils.tool.ToolCommand
 
 import scala.collection.JavaConversions._
 
-object ReplaceContigsVcffile extends ToolCommand {
+object ReplaceContigsVcfFile extends ToolCommand {
   def main(args: Array[String]): Unit = {
     val parser = new ArgsParser(toolName)
     val cmdArgs =
