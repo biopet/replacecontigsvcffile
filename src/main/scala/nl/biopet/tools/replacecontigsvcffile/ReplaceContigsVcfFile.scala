@@ -3,7 +3,7 @@ package nl.biopet.tools.replacecontigsvcffile
 import htsjdk.variant.variantcontext.VariantContextBuilder
 import htsjdk.variant.variantcontext.writer.{AsyncVariantContextWriter, VariantContextWriterBuilder}
 import htsjdk.variant.vcf.VCFFileReader
-import nl.biopet.utils.ngs.FastaUtils
+import nl.biopet.utils.ngs.fasta
 import nl.biopet.utils.tool.ToolCommand
 
 import scala.collection.JavaConversions._
@@ -21,7 +21,7 @@ object ReplaceContigsVcfFile extends ToolCommand {
 
     logger.info("Start")
 
-    val dict = FastaUtils.getDictFromFasta(cmdArgs.referenceFile)
+    val dict = fasta.getDictFromFasta(cmdArgs.referenceFile)
 
     val reader = new VCFFileReader(cmdArgs.input, false)
     val header = reader.getFileHeader
