@@ -17,7 +17,10 @@ class ArgsParser(cmdName: String) extends AbstractOptParser[Args](cmdName) {
   } text "Reference fasta file"
   opt[Map[String, String]]("contig") unbounded () action { (x, c) =>
     c.copy(contigs = c.contigs ++ x)
-  }
+  } text
+    """Only include these contigs in the output file. Can be specified multiple times for multiple contigs.
+      |When not specified, all contigs will be included in the output file.
+    """.stripMargin
   opt[File]("contigMappingFile") unbounded () action { (x, c) =>
     c.copy(contigs = c.contigs ++ fasta.readContigMapReverse(x))
   } text "File how to map contig names, first column is the new name, second column is semicolon separated list of alternative names"
