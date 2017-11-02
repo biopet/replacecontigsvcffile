@@ -1,9 +1,10 @@
 package nl.biopet.tools.replacecontigsvcffile
 
-import nl.biopet.test.BiopetTest
+import nl.biopet.utils.test.tools.ToolTest
 import org.testng.annotations.Test
 
-class ReplaceContigsVcfFileTest extends BiopetTest {
+class ReplaceContigsVcfFileTest extends ToolTest[Args] {
+  def toolCommand: ReplaceContigsVcfFile.type = ReplaceContigsVcfFile
   @Test
   def testNoArgs(): Unit = {
     intercept[IllegalArgumentException] {
