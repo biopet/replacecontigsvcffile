@@ -44,8 +44,13 @@ object ReplaceContigsVcfFile extends ToolCommand[Args] {
     for (record <- reader) {
       val builder = new VariantContextBuilder(record)
 
-      val newRecord =
-        builder.chr(contigMap.getOrElse(record.getContig, record.getContig)).make()
+      val newRecord = {
+        if (contigMap.contains(record.getContig))
+          builder.chr(contigMap(record.getContig)).make()
+        else if (!cmdArgs.caseSensitive && contigMap.contains(record.getContig.toLowerCase))
+          builder.chr(contigMap(record.getContig.toLowerCase)).make()
+        else record
+      }
       writer.write(newRecord)
     }
 
