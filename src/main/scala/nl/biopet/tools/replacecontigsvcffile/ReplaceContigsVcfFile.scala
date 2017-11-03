@@ -12,9 +12,7 @@ object ReplaceContigsVcfFile extends ToolCommand[Args] {
   def emptyArgs: Args = Args()
   def argsParser = new ArgsParser(toolName)
   def main(args: Array[String]): Unit = {
-    val cmdArgs = cmdArrayToArgs(args)
-
-    logger.info("Start")
+    val cmdArgs: Args = cmdArrayToArgs(args)
 
     if (!cmdArgs.input.exists)
       throw new IllegalStateException("Input file not found, file: " + cmdArgs.input)
@@ -22,6 +20,16 @@ object ReplaceContigsVcfFile extends ToolCommand[Args] {
     logger.info("Start")
 
     val dict = fasta.getDictFromFasta(cmdArgs.referenceFile)
+
+    val contigMap = {
+      val caseSensitive = cmdArgs.contigMapFile.map(fasta.readContigMapReverse).getOrElse(Map()) ++ cmdArgs.contigs
+      if (cmdArgs.caseSensitive) caseSensitive
+      else {
+        caseSensitive.map(x => x._1.toLowerCase -> x._2) ++ caseSensitive ++
+          dict.getSequences.filter(x => x.getSequenceName.toLowerCase !=  x.getSequenceName)
+            .map(x => x.getSequenceName.toLowerCase -> x.getSequenceName)
+      }
+    }
 
     val reader = new VCFFileReader(cmdArgs.input, false)
     val header = reader.getFileHeader
@@ -37,7 +45,7 @@ object ReplaceContigsVcfFile extends ToolCommand[Args] {
       val builder = new VariantContextBuilder(record)
 
       val newRecord =
-        builder.chr(cmdArgs.contigs.getOrElse(record.getContig, record.getContig)).make()
+        builder.chr(contigMap.getOrElse(record.getContig, record.getContig)).make()
       writer.write(newRecord)
     }
 

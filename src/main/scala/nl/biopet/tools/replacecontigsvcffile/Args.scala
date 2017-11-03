@@ -5,4 +5,6 @@ import java.io.File
 case class Args(input: File = null,
                 output: File = null,
                 referenceFile: File = null,
-                contigs: Map[String, String] = Map())
+                contigs: Map[String, String] = Map(),
+                contigMapFile: Option[File] = None,
+                caseSensitive: Boolean = false)
