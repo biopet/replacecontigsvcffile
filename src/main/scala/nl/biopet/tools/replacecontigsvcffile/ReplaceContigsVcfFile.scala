@@ -1,7 +1,10 @@
 package nl.biopet.tools.replacecontigsvcffile
 
 import htsjdk.variant.variantcontext.VariantContextBuilder
-import htsjdk.variant.variantcontext.writer.{AsyncVariantContextWriter, VariantContextWriterBuilder}
+import htsjdk.variant.variantcontext.writer.{
+  AsyncVariantContextWriter,
+  VariantContextWriterBuilder
+}
 import htsjdk.variant.vcf.VCFFileReader
 import nl.biopet.utils.ngs.fasta
 import nl.biopet.utils.tool.ToolCommand
@@ -14,18 +17,22 @@ object ReplaceContigsVcfFile extends ToolCommand[Args] {
   def main(args: Array[String]): Unit = {
     val cmdArgs: Args = cmdArrayToArgs(args)
 
-    require(cmdArgs.input.exists, s"Input file not found, file: ${cmdArgs.input}")
+    require(cmdArgs.input.exists,
+            s"Input file not found, file: ${cmdArgs.input}")
 
     logger.info("Start")
 
     val dict = fasta.getDictFromFasta(cmdArgs.referenceFile)
 
     val contigMap = {
-      val caseSensitive = cmdArgs.contigMapFile.map(fasta.readContigMapReverse).getOrElse(Map()) ++ cmdArgs.contigs
+      val caseSensitive = cmdArgs.contigMapFile
+        .map(fasta.readContigMapReverse)
+        .getOrElse(Map()) ++ cmdArgs.contigs
       if (cmdArgs.caseSensitive) caseSensitive
       else {
         caseSensitive.map(x => x._1.toLowerCase -> x._2) ++ caseSensitive ++
-          dict.getSequences.filter(x => x.getSequenceName.toLowerCase !=  x.getSequenceName)
+          dict.getSequences
+            .filter(x => x.getSequenceName.toLowerCase != x.getSequenceName)
             .map(x => x.getSequenceName.toLowerCase -> x.getSequenceName)
       }
     }
@@ -46,7 +53,8 @@ object ReplaceContigsVcfFile extends ToolCommand[Args] {
       val newRecord = {
         if (contigMap.contains(record.getContig))
           builder.chr(contigMap(record.getContig)).make()
-        else if (!cmdArgs.caseSensitive && contigMap.contains(record.getContig.toLowerCase))
+        else if (!cmdArgs.caseSensitive && contigMap.contains(
+                   record.getContig.toLowerCase))
           builder.chr(contigMap(record.getContig.toLowerCase)).make()
         else record
       }

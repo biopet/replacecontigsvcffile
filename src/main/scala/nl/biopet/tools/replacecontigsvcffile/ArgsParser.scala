@@ -9,11 +9,13 @@ class ArgsParser(cmdName: String) extends AbstractOptParser[Args](cmdName) {
   opt[File]('I', "input") required () valueName "<file>" action { (x, c) =>
     c.copy(input = x)
   } text "Input vcf file"
-  opt[File]('o', "output") required () unbounded () valueName "<file>" action { (x, c) =>
-    c.copy(output = x)
+  opt[File]('o', "output") required () unbounded () valueName "<file>" action {
+    (x, c) =>
+      c.copy(output = x)
   } text "Output vcf file"
-  opt[File]('R', "referenceFile") required () unbounded () valueName "<file>" action { (x, c) =>
-    c.copy(referenceFile = x)
+  opt[File]('R', "referenceFile") required () unbounded () valueName "<file>" action {
+    (x, c) =>
+      c.copy(referenceFile = x)
   } text "Reference fasta file"
   opt[Map[String, String]]("contig") unbounded () action { (x, c) =>
     c.copy(contigs = c.contigs ++ x)
