@@ -90,17 +90,14 @@ object ReplaceContigsVcfFile extends ToolCommand[Args] {
 
   def descriptionText: String =
     """
-      |This tool takes an input VCF file and outputs a VCF file. It can rename contigs:
+      |This tool takes an input VCF file and outputs a VCF file with renamed contigs.
       |For example chr1 -> 1. This can be useful in a pipeline where tools have different
-      |naming standards for contigs. It can also select which contigs are included in the
-      |output file.
-      |
+      |naming standards for contigs.
     """.stripMargin
 
   def manualText: String =
     s"""
-       |$toolName needs a reference fasta file and an input VCF file.
-       |To rename contigs it needs a contig mappig file.
+       |$toolName needs a reference fasta file, an input VCF file and a contig mappig file.
        |The contig mapping file should be in the following format.
        |
        |    chr1    1;I;one
@@ -108,13 +105,12 @@ object ReplaceContigsVcfFile extends ToolCommand[Args] {
        |
        |Any contigs found in the input VCF that have a contig name in the second column will be renamed
        |with the contig name in the corresponding first column.
-       |By default this is NOT case sensitive. Case sensitivity can be set with the `--caseSensitive` flag.
        |
      """.stripMargin
 
   def exampleText: String =
     s"""
-       |To convert the contig names in a caseSensitive way run:
+       |To convert the contig names in a vcf file run:
        |
        |${example("-I",
                   "input.vcf",
@@ -123,25 +119,8 @@ object ReplaceContigsVcfFile extends ToolCommand[Args] {
                   "-R",
                   "reference.fasta",
                   "--contigMappingFile",
-                  "contignames.tsv",
-                  "--caseSensitive")}
+                  "contignames.tsv")}
        |
        |The reference fasta is needed to validate the contigs.
-       |
-       |To output a VCF with only a few contigs of interest:
-       |
-       |${example("-I",
-                  "input.vcf",
-                  "-o",
-                  "output.vcf",
-                  "-R",
-                  "reference.fasta",
-                  "--contig",
-                  "chr1",
-                  "--contig",
-                  "chr13",
-                  "--contig",
-                  "chrY")}
-       |
      """.stripMargin
 }
