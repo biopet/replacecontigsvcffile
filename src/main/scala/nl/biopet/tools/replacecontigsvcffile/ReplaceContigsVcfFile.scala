@@ -66,4 +66,33 @@ object ReplaceContigsVcfFile extends ToolCommand[Args] {
 
     logger.info("Done")
   }
+
+  def descriptionText: String =
+    """
+      |This tool takes an input VCF file and outputs a VCF file with renamed contigs.
+      |For example chr1 -> 1. This can be useful in a pipeline where tools have different
+      |naming standards for contigs.
+    """.stripMargin
+
+  def manualText: String =
+    s"""
+       |$toolName needs a reference fasta file, an input VCF file and a contig mappig file.
+       |The contig mapping file should be in the following format.
+       |
+       |    chr1    1;I;one
+       |    chr2    2;II;two
+       |
+       |Any contigs found in the input VCF that have a contig name in the second column will be renamed
+       |with the contig name in the corresponding first column.
+       |
+     """.stripMargin
+
+  def exampleText: String =
+    s"""
+       |To convert the contig names in a vcf file run:
+       |
+       |${example("-I", "input.vcf", "-o", "output.vcf", "-R", "reference.fasta", "--contigMappingFile", "contignames.tsv")}
+       |
+       |The reference fasta is needed to validate the contigs.
+     """.stripMargin
 }
