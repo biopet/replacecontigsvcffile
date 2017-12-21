@@ -31,9 +31,8 @@ class ArgsParser(toolCommand: ToolCommand[Args])
   opt[File]('I', "input") required () valueName "<file>" action { (x, c) =>
     c.copy(input = x)
   } text "Input vcf file"
-  opt[File]('o', "output") required () valueName "<file>" action {
-    (x, c) =>
-      c.copy(output = x)
+  opt[File]('o', "output") required () valueName "<file>" action { (x, c) =>
+    c.copy(output = x)
   } text "Output vcf file"
   opt[File]('R', "referenceFile") required () valueName "<file>" action {
     (x, c) =>
