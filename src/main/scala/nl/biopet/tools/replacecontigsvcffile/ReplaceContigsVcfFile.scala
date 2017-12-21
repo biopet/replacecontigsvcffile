@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) 2017 Sequencing Analysis Support Core - Leiden University Medical Center
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package nl.biopet.tools.replacecontigsvcffile
 
 import htsjdk.variant.variantcontext.VariantContextBuilder
@@ -13,7 +34,7 @@ import scala.collection.JavaConversions._
 
 object ReplaceContigsVcfFile extends ToolCommand[Args] {
   def emptyArgs: Args = Args()
-  def argsParser = new ArgsParser(toolName)
+  def argsParser = new ArgsParser(this)
   def main(args: Array[String]): Unit = {
     val cmdArgs: Args = cmdArrayToArgs(args)
 
@@ -66,4 +87,84 @@ object ReplaceContigsVcfFile extends ToolCommand[Args] {
 
     logger.info("Done")
   }
+
+  def descriptionText: String =
+    """
+      |This tool takes an input VCF file and outputs a VCF file with renamed contigs.
+      |For example chr1 -> 1. This can be useful in a pipeline where tools have different
+      |naming standards for contigs.
+    """.stripMargin
+
+  def manualText: String =
+    s"""
+       |$toolName needs a reference fasta file and an input VCF file.
+       |The reference fasta is needed to validate the contigs. The renaming
+       |of contigs can be specified in a contig mapping file.
+       |The contig mapping file should be in the following format.
+       |
+       |    chr1    1;I;one
+       |    chr2    2;II;two
+       |
+       |Any contigs found in the input VCF that have a contig name in the second column will be renamed
+       |with the contig name in the corresponding first column.
+       |
+       |Alternatively, options can be specified on the command line. For example '1=chr1' will
+       |convert all contigs named '1' to 'chr1'.
+       |
+       |Mappings are NOT case sensitive by default. If you need case sensitivity use the `--caseSensitive` flag.
+       |
+     """.stripMargin
+
+  def exampleText: String =
+    s"""
+       |To convert the contig names in a vcf file with case sensitivity run:
+       |
+       |${example("-I",
+                  "input.vcf",
+                  "-o",
+                  "output.vcf",
+                  "-R",
+                  "reference.fasta",
+                  "--contigMappingFile",
+                  "contignames.tsv",
+                  "--caseSensitive")}
+       |
+       |To convert the contig names using command line options, similar
+       |to the example contig mapping file given in the manual:
+       |
+       |${example(
+         "-I",
+         "input.vcf",
+         "-o",
+         "output.vcf",
+         "-R",
+         "reference.fasta",
+         "--contig",
+         "1=chr1",
+         "--contig",
+         "I=chr1",
+         "--contig",
+         "one=chr1",
+         "--contig",
+         "2=chr2",
+         "--contig",
+         "II=chr2",
+         "--contig",
+         "two=chr2"
+       )}
+       |
+       | A contig mapping file and contigs can be used together:
+       |${example("-I",
+                  "input.vcf",
+                  "-o",
+                  "output.vcf",
+                  "-R",
+                  "reference.fasta",
+                  "--contigMappingFile",
+                  "contignames.tsv",
+                  "--contig",
+                  "3=chr3",
+                  "--contig",
+                  "III=chr3")}
+     """.stripMargin
 }
