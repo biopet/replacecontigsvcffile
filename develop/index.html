@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>ReplaceContigsVcfFile</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="css/docs.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">ReplaceContigsVcfFile</a>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="navbar-text" id="Version">
+              Version</li>
+          </ul>
+        </div>
+      </div>
+
+
+
+    </div>
+
+  </nav>
+  <div class="container">
+
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar" >
+
+        <ul class="nav nav-sidebar nav-list">
+          <li><b>Index</b></li>
+          
+          <li><a href="#description"><span>Description</span></a></li>
+          
+          <li><a href="#installation"><span>Installation</span></a></li>
+          
+          <li><a href="#manual"><span>Manual</span></a></li>
+          
+          <li><a href="#about"><span>About</span></a></li>
+          
+          <li><a href="#contributing"><span>Contributing</span></a></li>
+          
+          <li><a href="#contact"><span>Contact</span></a></li>
+          
+        </ul>
+        <ul class="nav nav-sidebar nav-list">
+          <li><b>Project Links</b></li>
+
+          <li><a href="https://github.com/biopet/replacecontigsvcffile">Source code</a></li>
+          <li><a href="https://github.com/biopet/replacecontigsvcffile/issues">Feedback, feature requests and bug reports</a></li>
+          <li><a href="api/index.html">API Documentation</a></li>
+        </ul>
+        <ul class="nav nav-sidebar nav-list">
+          <li><b>Documentation</b></li>
+          <li><a href="../index.html">Latest stable version</a></li>
+          <li><a href="../develop/index.html">Development version</a></li>
+        </ul>
+      </div>
+      
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="top">
+
+        
+        <h1 id="description" class="section">Description</h1>
+        <p>This tool takes an input VCF file and outputs a VCF file with renamed contigs.
+        For example chr1 -&gt; 1. This can be useful in a pipeline where tools have different
+        naming standards for contigs.</p>
+        
+        <h1 id="installation" class="section">Installation</h1>
+        <p>ReplaceContigsVcfFile requires Java 8 to be installed on your device. Download Java 8
+        <a href="http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html">here</a>
+        or install via your distribution&#39;s package manager.</p>
+        <p>Download the latest version of ReplaceContigsVcfFile <a href="https://github.com/biopet/replacecontigsvcffile/releases/">here</a>.
+        To generate the usage run:</p>
+        <pre><code>java -jar ReplaceContigsVcfFile --version.jar --help</code></pre>
+        
+        <h1 id="manual" class="section">Manual</h1>
+        <p>ReplaceContigsVcfFile needs a reference fasta file and an input VCF file.
+        The reference fasta is needed to validate the contigs. The renaming
+        of contigs can be specified in a contig mapping file.
+        The contig mapping file should be in the following format.</p>
+        <pre><code>chr1    1;I;one
+chr2    2;II;two</code></pre>
+        <p>Any contigs found in the input VCF that have a contig name in the second column will be renamed
+        with the contig name in the corresponding first column.</p>
+        <p>Alternatively, options can be specified on the command line. For example &#39;1=chr1&#39; will
+        convert all contigs named &#39;1&#39; to &#39;chr1&#39;.</p>
+        <p>Mappings are NOT case sensitive by default. If you need case sensitivity use the <code>--caseSensitive</code> flag.</p>
+        
+        <h2 id="example" class="section">Example</h2>
+        <p>To convert the contig names in a vcf file with case sensitivity run:</p>
+        <pre><code>java -jar &lt;ReplaceContigsVcfFile_jar&gt; \
+-I input.vcf \
+-o output.vcf \
+-R reference.fasta \
+--contigMappingFile contignames.tsv \
+--caseSensitive</code></pre>
+        <p>To convert the contig names using command line options, similar
+        to the example contig mapping file given in the manual:</p>
+        <pre><code>java -jar &lt;ReplaceContigsVcfFile_jar&gt; \
+-I input.vcf \
+-o output.vcf \
+-R reference.fasta \
+--contig 1=chr1 \
+--contig I=chr1 \
+--contig one=chr1 \
+--contig 2=chr2 \
+--contig II=chr2 \
+--contig two=chr2
+
+
+</code></pre>
+        <p> A contig mapping file and contigs can be used together:</p>
+        <pre><code>java -jar &lt;ReplaceContigsVcfFile_jar&gt; \
+-I input.vcf \
+-o output.vcf \
+-R reference.fasta \
+--contigMappingFile contignames.tsv \
+--contig 3=chr3 \
+--contig III=chr3</code></pre>
+        
+        <h2 id="usage" class="section">Usage</h2>
+        <p>Usage for ReplaceContigsVcfFile:</p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Option</th>
+              <th>Required</th>
+              <th>Can occur multiple times</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>--log_level, -l</td>
+              <td>no</td>
+              <td>no</td>
+              <td>Level of log information printed. Possible levels: &#39;debug&#39;, &#39;info&#39;, &#39;warn&#39;, &#39;error&#39;</td>
+            </tr>
+            <tr>
+              <td>--help, -h</td>
+              <td>no</td>
+              <td>no</td>
+              <td>Print usage</td>
+            </tr>
+            <tr>
+              <td>--version, -v</td>
+              <td>no</td>
+              <td>no</td>
+              <td>Print version</td>
+            </tr>
+            <tr>
+              <td>--input, -I</td>
+              <td>yes</td>
+              <td>no</td>
+              <td>Input vcf file</td>
+            </tr>
+            <tr>
+              <td>--output, -o</td>
+              <td>yes</td>
+              <td>no</td>
+              <td>Output vcf file</td>
+            </tr>
+            <tr>
+              <td>--referenceFile, -R</td>
+              <td>yes</td>
+              <td>no</td>
+              <td>Reference fasta file</td>
+            </tr>
+            <tr>
+              <td>--contig</td>
+              <td>no</td>
+              <td>yes (unlimited)</td>
+              <td>Specify contig mappings on the command line. Example &#39;1=chr1&#39; will convert
+        contig &#39;1&#39; to &#39;chr1&#39;
+            </td>
+            </tr>
+            <tr>
+              <td>--contigMappingFile</td>
+              <td>no</td>
+              <td>no</td>
+              <td>File how to map contig names, first column is the new name, second column is semicolon separated list of alternative names</td>
+            </tr>
+            <tr>
+              <td>--caseSensitive</td>
+              <td>no</td>
+              <td>no</td>
+              <td>If set the tool does not try to match case differences, example: chr1_gl000191_random will not match to chr1_GL000191_random</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <h1 id="about" class="section">About</h1>
+        <p>ReplaceContigsVcfFile is part of BIOPET tool suite that is developed at LUMC by <a href="http://sasc.lumc.nl/">the SASC team</a>.
+        Each tool in the BIOPET tool suite is meant to offer a standalone function that can be used to perform a
+        dedicate data analysis task or added as part of <a href="http://biopet-docs.readthedocs.io/en/latest/">BIOPET pipelines</a>.</p>
+        <p>All tools in the BIOPET tool suite are <a href="https://www.gnu.org/philosophy/free-sw.html">Free</a> and
+        <a href="https://opensource.org/osd">Open Source</a> Software.</p>
+        
+        <h1 id="contributing" class="section">Contributing</h1>
+        <p>The source code of ReplaceContigsVcfFile can be found <a href="https://github.com/biopet/replacecontigsvcffile">here</a>.
+        We welcome any contributions. Bug reports, feature requests and feedback can be submitted at our
+        <a href="https://github.com/biopet/replacecontigsvcffile/issues">issue tracker</a>.</p>
+        <p>ReplaceContigsVcfFile is build using sbt. Before submitting a pull request, make sure all tests can be passed by
+        running <code>sbt test</code> from the project&#39;s root. We recommend using an IDE to work on ReplaceContigsVcfFile. We have had
+        good results with <a href="https://www.jetbrains.com/idea/">this IDE</a>.</p>
+        
+        <h1 id="contact" class="section">Contact</h1>
+        <p>
+          <!-- Obscure e-mail address for spammers -->
+        For any question related to ReplaceContigsVcfFile, please use the
+        <a href='https://github.com/biopet/replacecontigsvcffile/issues'>github issue tracker</a>
+        or contact
+         <a href='http://sasc.lumc.nl/'>the SASC team</a> directly at: <a href='&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#97;&#115;&#99;&#64;&#108;&#117;&#109;&#99;&#46;&#110;&#108;'>
+        &#115;&#97;&#115;&#99;&#64;&#108;&#117;&#109;&#99;&#46;&#110;&#108;</a>.
+        </p>      
+
+      </div>
+    </div>
+
+  </div>
+  <script>
+    var loc = window.location.pathname;
+    var thisDir = loc.substring(0, loc.lastIndexOf('/'));
+    var splitLocation = window.location.pathname.split('/');
+    var version = splitLocation[splitLocation.length - 2]
+    document.getElementById("Version").innerHTML = "Version " + version;
+  </script>
+</body>
+
+</html>
