@@ -41,8 +41,8 @@ class ArgsParser(toolCommand: ToolCommand[Args])
   opt[Map[String, String]]("contig") unbounded () action { (x, c) =>
     c.copy(contigs = c.contigs ++ x)
   } text
-    """Only include these contigs in the output file. Can be specified multiple times for multiple contigs.
-      |When not specified, all contigs will be included in the output file.
+    """Specify contig mappings on the command line. Example '1=chr1' will convert
+       |contig '1' to 'chr1'
     """.stripMargin
   opt[File]("contigMappingFile") action { (x, c) =>
     c.copy(contigMapFile = Some(x))
