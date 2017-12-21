@@ -31,11 +31,11 @@ class ArgsParser(toolCommand: ToolCommand[Args])
   opt[File]('I', "input") required () valueName "<file>" action { (x, c) =>
     c.copy(input = x)
   } text "Input vcf file"
-  opt[File]('o', "output") required () unbounded () valueName "<file>" action {
+  opt[File]('o', "output") required () valueName "<file>" action {
     (x, c) =>
       c.copy(output = x)
   } text "Output vcf file"
-  opt[File]('R', "referenceFile") required () unbounded () valueName "<file>" action {
+  opt[File]('R', "referenceFile") required () valueName "<file>" action {
     (x, c) =>
       c.copy(referenceFile = x)
   } text "Reference fasta file"
@@ -45,10 +45,10 @@ class ArgsParser(toolCommand: ToolCommand[Args])
     """Only include these contigs in the output file. Can be specified multiple times for multiple contigs.
       |When not specified, all contigs will be included in the output file.
     """.stripMargin
-  opt[File]("contigMappingFile") unbounded () action { (x, c) =>
+  opt[File]("contigMappingFile") action { (x, c) =>
     c.copy(contigMapFile = Some(x))
   } text "File how to map contig names, first column is the new name, second column is semicolon separated list of alternative names"
-  opt[Unit]("caseSensitive") unbounded () action { (_, c) =>
+  opt[Unit]("caseSensitive") action { (_, c) =>
     c.copy(caseSensitive = true)
   } text "If set the tool does not try to match case differences, example: chr1_gl000191_random will not match to chr1_GL000191_random"
 }
