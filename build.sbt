@@ -8,7 +8,6 @@ biopetUrlName := "replacecontigsvcffile"
 
 biopetIsTool := true
 
-// TODO: Check if mainClass is correct
 mainClass in assembly := Some("nl.biopet.tools.replacecontigsvcffile.ReplaceContigsVcfFile")
 
 developers := List(
